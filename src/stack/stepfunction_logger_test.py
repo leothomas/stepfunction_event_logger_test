@@ -7,11 +7,12 @@ BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 LAMBDA_DIR = BASE_PATH.replace("stack", "lambda")
 
 
-class StepfunctionLoggerTestStack(core.Stack):
+class StepfunctionLoggerStack(core.Stack):
     def __init__(
         self,
         scope: core.Construct,
         id: str,
+        custom_lambda: bool,
         **kwargs,
     ) -> None:
         super().__init__(scope, id, **kwargs)
@@ -61,22 +62,23 @@ class StepfunctionLoggerTestStack(core.Stack):
             },
         )
         custom_error_handling_bucket.grant_write(custom_error_handling_lambda)
+        if custom_lambda:
 
-        stepfunction_event_logger.StepFunctionEventLogger(
-            self,
-            "StepfunctionEventLogger",
-            props=stepfunction_event_logger.EventLoggerCustomLambdaProps(
-                lambda_=custom_error_handling_lambda,
-                stepfunctions=[stepfunction_to_monitor],
-            ),
-        )
-        # stepfunction_event_logger.StepFunctionEventLogger(
-        #     self,
-        #     "StepfunctionEventLogger",
-        #     props=stepfunction_event_logger.EventLoggerStandardLambdaProps(
-               
-        #         event_logging_level=stepfunction_event_logger.EventLoggingLevel.FULL,
-        #         datastore=stepfunction_event_logger.Datastore.DYNAMODB,
-        #         stepfunctions=[stepfunction_to_monitor],
-        #     ),
-        # )
+            stepfunction_event_logger.StepFunctionEventLogger(
+                self,
+                "StepfunctionEventLogger",
+                props=stepfunction_event_logger.EventLoggerCustomLambdaProps(
+                    lambda_=custom_error_handling_lambda,
+                    stepfunctions=[stepfunction_to_monitor],
+                ),
+            )
+        else:
+            stepfunction_event_logger.StepFunctionEventLogger(
+                self,
+                "StepfunctionEventLogger",
+                props=stepfunction_event_logger.EventLoggerStandardLambdaProps(
+                    event_logging_level=stepfunction_event_logger.EventLoggingLevel.FULL,
+                    datastore=stepfunction_event_logger.Datastore.DYNAMODB,
+                    stepfunctions=[stepfunction_to_monitor],
+                ),
+            )
