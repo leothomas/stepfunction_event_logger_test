@@ -8,7 +8,7 @@ verify_ssl = true
 "aws-cdk.aws-stepfunctions" = "1.74.0"
 "aws-cdk.aws-lambda" = "1.74.0"
 "aws-cdk.aws-stepfunctions-tasks" = "1.74.0"
-"cdk-seed.stepfunction-event-logger" = {path = "./../cdk-seed/packages/stepfunction-event-logger/dist/python/cdk_seed.stepfunction_event_logger-1.0.0-py3-none-any.whl"}
+"cdk-seed.stepfunction-event-logger" = {path = "./cdk_seed.stepfunction_event_logger-1.0.0-py3-none-any.whl"}
 
 [requires]
 python_version = "3.8"
